@@ -12,7 +12,11 @@ import java.util.List;
 
 public class FlowLayout extends ViewGroup {
     private static final String LOG_TAG = FlowLayout.class.getSimpleName();
-
+    /**
+     * Special value for the child view spacing.
+     * SPACING_FIX_AVG =(ViewGroup_content_width % first_child_width)/(line_max_child_count-1)
+     */
+    public static final int SPACING_FIX_AVG = -65535;
     /**
      * Special value for the child view spacing.
      * SPACING_AUTO means that the actual spacing is calculated according to the size of the
@@ -28,6 +32,7 @@ public class FlowLayout extends ViewGroup {
      * ignored and the spacing will be calculated according to childSpacing.
      */
     public static final int SPACING_ALIGN = -65537;
+
 
     private static final int SPACING_UNDEFINED = -65538;
 
@@ -64,16 +69,16 @@ public class FlowLayout extends ViewGroup {
             try {
                 mChildSpacing = a.getInt(R.styleable.FlowLayout_flChildSpacing, DEFAULT_CHILD_SPACING);
             } catch (NumberFormatException e) {
-                mChildSpacing = a.getDimensionPixelSize(R.styleable.FlowLayout_flChildSpacing, (int)dpToPx(DEFAULT_CHILD_SPACING));
+                mChildSpacing = a.getDimensionPixelSize(R.styleable.FlowLayout_flChildSpacing, (int) dpToPx(DEFAULT_CHILD_SPACING));
             }
             try {
                 mChildSpacingForLastRow = a.getInt(R.styleable.FlowLayout_flChildSpacingForLastRow, SPACING_UNDEFINED);
             } catch (NumberFormatException e) {
-                mChildSpacingForLastRow = a.getDimensionPixelSize(R.styleable.FlowLayout_flChildSpacingForLastRow, (int)dpToPx(DEFAULT_CHILD_SPACING));
+                mChildSpacingForLastRow = a.getDimensionPixelSize(R.styleable.FlowLayout_flChildSpacingForLastRow, (int) dpToPx(DEFAULT_CHILD_SPACING));
             }
             try {
                 mRowSpacing = a.getInt(R.styleable.FlowLayout_flRowSpacing, 0);
-            }  catch (NumberFormatException e) {
+            } catch (NumberFormatException e) {
                 mRowSpacing = a.getDimension(R.styleable.FlowLayout_flRowSpacing, dpToPx(DEFAULT_ROW_SPACING));
             }
             mMaxRows = a.getInt(R.styleable.FlowLayout_flMaxRows, DEFAULT_MAX_ROWS);
@@ -95,6 +100,7 @@ public class FlowLayout extends ViewGroup {
         mHorizontalSpacingForRow.clear();
         mChildNumForRow.clear();
         mHeightForRow.clear();
+        if (mChildSpacing == SPACING_FIX_AVG) initFixAvgSpacing();
 
         int measuredHeight = 0, measuredWidth = 0, childCount = getChildCount();
         int rowWidth = 0, maxChildHeightInRow = 0, childNumInRow = 0;
@@ -113,7 +119,7 @@ public class FlowLayout extends ViewGroup {
             LayoutParams childParams = child.getLayoutParams();
             int horizontalMargin = 0, verticalMargin = 0;
             if (childParams instanceof MarginLayoutParams) {
-                measureChildWithMargins(child, widthMeasureSpec, 0,heightMeasureSpec, measuredHeight);
+                measureChildWithMargins(child, widthMeasureSpec, 0, heightMeasureSpec, measuredHeight);
                 MarginLayoutParams marginParams = (MarginLayoutParams) childParams;
                 horizontalMargin = marginParams.leftMargin + marginParams.rightMargin;
                 verticalMargin = marginParams.topMargin + marginParams.bottomMargin;
@@ -129,14 +135,14 @@ public class FlowLayout extends ViewGroup {
                         getSpacingForRow(childSpacing, rowSize, rowWidth, childNumInRow));
                 mChildNumForRow.add(childNumInRow);
                 mHeightForRow.add(maxChildHeightInRow);
-                if (mHorizontalSpacingForRow.size() <= mMaxRows){
+                if (mHorizontalSpacingForRow.size() <= mMaxRows) {
                     measuredHeight += maxChildHeightInRow;
                 }
                 measuredWidth = Math.max(measuredWidth, rowWidth);
 
                 // Place the child view to next row
                 childNumInRow = 1;
-                rowWidth = childWidth + (int)tmpSpacing;
+                rowWidth = childWidth + (int) tmpSpacing;
                 maxChildHeightInRow = childHeight;
             } else {
                 childNumInRow++;
@@ -168,7 +174,7 @@ public class FlowLayout extends ViewGroup {
 
         mChildNumForRow.add(childNumInRow);
         mHeightForRow.add(maxChildHeightInRow);
-        if (mHorizontalSpacingForRow.size() <= mMaxRows){
+        if (mHorizontalSpacingForRow.size() <= mMaxRows) {
             measuredHeight += maxChildHeightInRow;
         }
         measuredWidth = Math.max(measuredWidth, rowWidth);
@@ -198,13 +204,24 @@ public class FlowLayout extends ViewGroup {
                 measuredHeight = heightMode == MeasureSpec.UNSPECIFIED
                         ? ((int) (measuredHeight + mAdjustedRowSpacing * (rowNum - 1)))
                         : (Math.min((int) (measuredHeight + mAdjustedRowSpacing * (rowNum - 1)),
-                                    heightSize));
+                        heightSize));
             }
         }
 
         measuredWidth = widthMode == MeasureSpec.EXACTLY ? widthSize : measuredWidth;
         measuredHeight = heightMode == MeasureSpec.EXACTLY ? heightSize : measuredHeight;
         setMeasuredDimension(measuredWidth, measuredHeight);
+    }
+
+    private void initFixAvgSpacing() {
+        int width = getMeasuredWidth() - getPaddingLeft() - getPaddingRight();
+        View view = getChildAt(0);
+        if (width > 0 && view != null) {
+            int w = view.getMeasuredWidth();
+            if (w > 0) {
+                setChildSpacing((width % w) / (width / w - 1));
+            }
+        }
     }
 
     @Override
@@ -220,7 +237,7 @@ public class FlowLayout extends ViewGroup {
             int childNum = mChildNumForRow.get(row);
             int rowHeight = mHeightForRow.get(row);
             float spacing = mHorizontalSpacingForRow.get(row);
-            for (int i = 0; i < childNum && childIdx < getChildCount();) {
+            for (int i = 0; i < childNum && childIdx < getChildCount(); ) {
                 View child = getChildAt(childIdx++);
                 if (child.getVisibility() == GONE) {
                     continue;
@@ -296,7 +313,7 @@ public class FlowLayout extends ViewGroup {
      * Sets the horizontal spacing between child views.
      *
      * @param childSpacing The spacing, either {@link FlowLayout#SPACING_AUTO}, or a fixed size in
-     *        pixels.
+     *                     pixels.
      */
     public void setChildSpacing(int childSpacing) {
         mChildSpacing = childSpacing;
@@ -307,7 +324,7 @@ public class FlowLayout extends ViewGroup {
      * Returns the horizontal spacing between child views of the last row.
      *
      * @return The spacing, either {@link FlowLayout#SPACING_AUTO},
-     *         {@link FlowLayout#SPACING_ALIGN}, or a fixed size in pixels
+     * {@link FlowLayout#SPACING_ALIGN}, or a fixed size in pixels
      */
     public int getChildSpacingForLastRow() {
         return mChildSpacingForLastRow;
@@ -317,7 +334,7 @@ public class FlowLayout extends ViewGroup {
      * Sets the horizontal spacing between child views of the last row.
      *
      * @param childSpacingForLastRow The spacing, either {@link FlowLayout#SPACING_AUTO},
-     *        {@link FlowLayout#SPACING_ALIGN}, or a fixed size in pixels
+     *                               {@link FlowLayout#SPACING_ALIGN}, or a fixed size in pixels
      */
     public void setChildSpacingForLastRow(int childSpacingForLastRow) {
         mChildSpacingForLastRow = childSpacingForLastRow;
@@ -338,7 +355,7 @@ public class FlowLayout extends ViewGroup {
      * in vertical.
      *
      * @param rowSpacing The spacing, either {@link FlowLayout#SPACING_AUTO}, or a fixed size in
-     *        pixels.
+     *                   pixels.
      */
     public void setRowSpacing(float rowSpacing) {
         mRowSpacing = rowSpacing;
@@ -378,7 +395,7 @@ public class FlowLayout extends ViewGroup {
         return spacing;
     }
 
-    private float dpToPx(float dp){
+    private float dpToPx(float dp) {
         return TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP, dp, getResources().getDisplayMetrics());
     }

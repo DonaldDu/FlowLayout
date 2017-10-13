@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
@@ -14,11 +13,96 @@
     tools:context="com.nex3z.flowlayout.sample.MainActivity">
 
     <com.nex3z.flowlayout.FlowLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        app:flChildSpacing="fix_avg"
+        app:flChildSpacingForLastRow="align"
+        app:flRowSpacing="8dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#4554"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="fix_avg" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#4554"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="fix_avg" />
+
+
+    </com.nex3z.flowlayout.FlowLayout>
+
+    <com.nex3z.flowlayout.FlowLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        app:flChildSpacing="fix_avg"
+        app:flChildSpacingForLastRow="align"
+        app:flRowSpacing="8dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#4554"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="fix_avg" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#4554"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="fix_avg" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#4554"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="fix_avg" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#4554"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="fix_avg" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#4554"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="fix_avg" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#4554"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="fix_avg" />
+
+    </com.nex3z.flowlayout.FlowLayout>
+
+    <com.nex3z.flowlayout.FlowLayout
         android:id="@+id/flow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:flChildSpacing="auto"
-        app:flRowSpacing="8dp"/>
+        app:flRowSpacing="8dp" />
 
     <com.nex3z.flowlayout.FlowLayout
         android:id="@+id/flow2"
@@ -32,58 +116,58 @@
         <TextView
             android:layout_width="60dp"
             android:layout_height="wrap_content"
+            android:background="@drawable/label_bg"
             android:gravity="center"
             android:padding="8dp"
-            android:background="@drawable/label_bg"
-            android:text="@string/sun"/>
+            android:text="@string/sun" />
 
         <TextView
             android:layout_width="60dp"
             android:layout_height="wrap_content"
+            android:background="@drawable/label_bg"
             android:gravity="center"
             android:padding="8dp"
-            android:background="@drawable/label_bg"
-            android:text="@string/mon"/>
+            android:text="@string/mon" />
 
         <TextView
             android:layout_width="60dp"
             android:layout_height="wrap_content"
+            android:background="@drawable/label_bg"
             android:gravity="center"
             android:padding="8dp"
-            android:background="@drawable/label_bg"
-            android:text="@string/tue"/>
+            android:text="@string/tue" />
 
         <TextView
             android:layout_width="60dp"
             android:layout_height="wrap_content"
+            android:background="@drawable/label_bg"
             android:gravity="center"
             android:padding="8dp"
-            android:background="@drawable/label_bg"
-            android:text="@string/wed"/>
+            android:text="@string/wed" />
 
         <TextView
             android:layout_width="60dp"
             android:layout_height="wrap_content"
+            android:background="@drawable/label_bg"
             android:gravity="center"
             android:padding="8dp"
-            android:background="@drawable/label_bg"
-            android:text="@string/thu"/>
+            android:text="@string/thu" />
 
         <TextView
             android:layout_width="60dp"
             android:layout_height="wrap_content"
+            android:background="@drawable/label_bg"
             android:gravity="center"
             android:padding="8dp"
-            android:background="@drawable/label_bg"
-            android:text="@string/fri"/>
+            android:text="@string/fri" />
 
         <TextView
             android:layout_width="60dp"
             android:layout_height="wrap_content"
+            android:background="@drawable/label_bg"
             android:gravity="center"
             android:padding="8dp"
-            android:background="@drawable/label_bg"
-            android:text="@string/sat"/>
+            android:text="@string/sat" />
 
     </com.nex3z.flowlayout.FlowLayout>
 
@@ -92,6 +176,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="@string/with_recyclerview"/>
+        android:text="@string/with_recyclerview" />
 
 </LinearLayout>
