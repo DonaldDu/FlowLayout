@@ -91,6 +91,13 @@ public class FlowLayout extends ViewGroup {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        if (mChildSpacing == SPACING_FIX_AVG) {
+            View firstChild = getChildAt(0);
+            if (firstChild != null) {
+                measureChild(firstChild, widthMeasureSpec, heightMeasureSpec);
+                initFixAvgSpacing();
+            } else return;
+        }
 
         int widthSize = MeasureSpec.getSize(widthMeasureSpec);
         int widthMode = MeasureSpec.getMode(widthMeasureSpec);
@@ -100,14 +107,12 @@ public class FlowLayout extends ViewGroup {
         mHorizontalSpacingForRow.clear();
         mChildNumForRow.clear();
         mHeightForRow.clear();
-        if (mChildSpacing == SPACING_FIX_AVG) initFixAvgSpacing();
 
         int measuredHeight = 0, measuredWidth = 0, childCount = getChildCount();
         int rowWidth = 0, maxChildHeightInRow = 0, childNumInRow = 0;
         int rowSize = widthSize - getPaddingLeft() - getPaddingRight();
         boolean allowFlow = widthMode != MeasureSpec.UNSPECIFIED && mFlow;
-        int childSpacing = mChildSpacing == SPACING_AUTO && widthMode == MeasureSpec.UNSPECIFIED
-                ? 0 : mChildSpacing;
+        int childSpacing = mChildSpacing == SPACING_AUTO && widthMode == MeasureSpec.UNSPECIFIED ? 0 : mChildSpacing;
         float tmpSpacing = childSpacing == SPACING_AUTO ? 0 : childSpacing;
 
         for (int i = 0; i < childCount; i++) {
@@ -216,7 +221,7 @@ public class FlowLayout extends ViewGroup {
     private void initFixAvgSpacing() {
         int width = getMeasuredWidth() - getPaddingLeft() - getPaddingRight();
         View view = getChildAt(0);
-        if (width > 0 && view != null) {
+        if (width > 0) {
             int w = view.getMeasuredWidth();
             if (w > 0) {
                 setChildSpacing((width % w) / (width / w - 1));
